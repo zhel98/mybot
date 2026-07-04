@@ -8,7 +8,7 @@ keyboard_main= ReplyKeyboardMarkup(
 inline = InlineKeyboardMarkup(
     inline_keyboard=[
         
-    [InlineKeyboardButton(text="Подтвердить", callback_data="confirm_register"),
-    InlineKeyboardButton(text="Начать заново", callback_data="restart_register")]
+    [InlineKeyboardButton(text="Подтвердить", callback_data="Da"),
+    InlineKeyboardButton(text="Начать заново", callback_data="e51an")]
     
     ])

@@ -14,6 +14,7 @@ users = {}
 class Register(StatesGroup):
     name = State()
     age = State()
+    confirm = State()
 
 @router.message(CommandStart())
 async def cmd_start(message: Message):
@@ -66,9 +67,9 @@ async def register_name(message: Message, state: FSMContext):
 @router.message(Register.age)
 async def register_age(message: Message, state: FSMContext):
     if not message.text.isdigit():
-        await message.answer(" нужно ввести цифра")
+        await message.answer(" нужна цифра")
         return
-
+    await state.update_data(age=message.text)
     data = await state.get_data()
 
     user_id = message.from_user.id
@@ -78,7 +79,7 @@ async def register_age(message: Message, state: FSMContext):
         "age": message.text
     }#slovarik
 
-    await state.clear()
+
 
     await message.answer(
         f"Регистрация завершена!\n\n"
@@ -87,3 +88,29 @@ async def register_age(message: Message, state: FSMContext):
         f'подтверждаете?',
         reply_markup=inline
     )
+    await state.set_state(Register.confirm)
+    
+@router.callback_query(Register.confirm,F.data == "Da" )
+async def confirm_register(callback: CallbackQuery, state: FSMContext):
+    data = await state.get_data()
+    user_id = callback.from_user.id
+
+    users[user_id] = {
+        "name": data["name"],
+        "age": data["age"]
+    }
+
+    await state.clear()
+
+    await callback.answer()
+    await callback.message.answer("Регистрация завершена!")
+
+
+@router.callback_query(Register.confirm, F.data == "e51an")
+async def restart_register(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
+
+    await callback.answer()
+    await callback.message.answer("Хорошо, начнем заново. Введите ваше имя:")
+
+    await state.set_state(Register.name)
