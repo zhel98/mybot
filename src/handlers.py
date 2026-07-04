@@ -103,7 +103,7 @@ async def confirm_register(callback: CallbackQuery, state: FSMContext):
     await state.clear()
 
     await callback.answer()
-    await callback.message.answer("Регистрация завершена!")
+    await callback.message.answer("рега завершена!")
 
 
 @router.callback_query(Register.confirm, F.data == "e51an")
@@ -111,6 +111,6 @@ async def restart_register(callback: CallbackQuery, state: FSMContext):
     await state.clear()
 
     await callback.answer()
-    await callback.message.answer("Хорошо, начнем заново. Введите ваше имя:")
+    await callback.message.answer("начнем заново еблан. Введи имя:")
 
     await state.set_state(Register.name)
